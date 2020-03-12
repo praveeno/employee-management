@@ -17,6 +17,7 @@
   "bugs": {
     "url": "https://github.com/praveeno/employee-management/issues"
   },
+  "homepage": "https://praveeno.github.io/employee-management/",
   "dependencies": {
     "antd": "^4.0.2",
     "react": "^16.13.0",
