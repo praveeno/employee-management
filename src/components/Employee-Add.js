@@ -20,6 +20,7 @@ import {
   addEmployee,
   closeAddEmployeeModel
 } from '../actions/employeeAddAction';
+import { updateEmployee } from '../actions/employeeUpdateAction';
 const { Step } = Steps;
 
 class EmployeeAdd extends Component {
@@ -209,7 +210,12 @@ class EmployeeAdd extends Component {
       const employee = convertFlatObjectToNested(employeeFormState);
       employee.id = this.id;
       // TODO:// close modal only when this async function finish
-      this.props.dispatch(addEmployee(employee));
+      // TODO:// move this api call to outside of this component and call from parent compoenent
+      if (isEditing) {
+        this.props.dispatch(updateEmployee(this.id, employee));
+      } else {
+        this.props.dispatch(addEmployee(employee));
+      }
       this.handleCancel();
       this.props.dispatch(onSave(employee, isEditing)); // notify parent
       // clear form
@@ -225,7 +231,6 @@ class EmployeeAdd extends Component {
     });
   };
   editEmployee(employee) {
-    debugger;
     const flatEmployeeStructure = convertNestedObjectToFlat(employee);
     this.id = flatEmployeeStructure.id;
     this.setState({

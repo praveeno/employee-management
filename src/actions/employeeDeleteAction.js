@@ -24,7 +24,7 @@ function deleteEmployeeError(error) {
 }
 
 function _deleteEmployee(id) {
-  return fetch(`https://jsonplaceholder.typicode.com/users:${id}`, {
+  return fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
     method: 'DELETE'
   })
     .then(handleErrors)
@@ -32,9 +32,7 @@ function _deleteEmployee(id) {
 }
 
 export function deleteEmployee(id) {
-  debugger;
   return dispatch => {
-    debugger;
     dispatch(deleteEmployeeBegin());
     return _deleteEmployee(id)
       .then(json => {

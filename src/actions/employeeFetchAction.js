@@ -19,9 +19,7 @@ export function addEmployeeToEmployees(employee, isEditing) {
   };
 }
 export function deleteEmployeeToEmployees(id) {
-  debugger;
   return dispatch => {
-    debugger;
     dispatch({
       type: DELETE_EMPLOYEE_TO_EMPLOYEES_LIST,
       payload: id
@@ -53,17 +51,6 @@ function getAllEmployees() {
   return fetch('https://jsonplaceholder.typicode.com/users')
     .then(handleErrors)
     .then(res => res.json());
-}
-export function getEmployee(id) {
-  return dispatch => {
-    dispatch(fetchEmployeesBegin());
-    return getAllEmployees()
-      .then(json => {
-        dispatch(fetchEmployeesSuccess(json));
-        return json;
-      })
-      .catch(error => dispatch(fetchEmployeesError(error)));
-  };
 }
 
 export function fetchEmployees() {

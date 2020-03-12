@@ -18,7 +18,6 @@ class EmployeeList extends Component {
   };
 
   _deleteEmployee = id => {
-    debugger;
     this.props.dispatch(deleteEmployee(id));
     // TODO: //call this when above async function resolve
     this.props.dispatch(deleteEmployeeToEmployees(id));

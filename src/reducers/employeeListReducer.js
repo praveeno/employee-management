@@ -40,13 +40,11 @@ export function employeeListReducer(state = initialState, action) {
     case UPDATE_EMPLOYEE_TO_EMPLOYEES_LIST:
       const i = state.employees.findIndex(e => e.id === action.payload.id);
       state.employees[i] = action.payload;
-      debugger;
       return {
         ...state,
         employees: [...state.employees]
       };
     case DELETE_EMPLOYEE_TO_EMPLOYEES_LIST:
-      debugger;
       const employees = state.employees.filter(e => e.id !== action.payload);
       return {
         ...state,

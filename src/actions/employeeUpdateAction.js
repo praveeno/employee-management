@@ -24,7 +24,7 @@ function updateEmployeeError(error) {
 }
 
 function _updateEmployee(id, employee) {
-  return fetch(`https://jsonplaceholder.typicode.com/users:${id}`, {
+  return fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
     method: 'PUT',
     body: employee && JSON.stringify(employee)
   })
