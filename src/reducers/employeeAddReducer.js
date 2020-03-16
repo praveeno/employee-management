@@ -45,7 +45,8 @@ export function employeeAddReducer(state = initialState, action) {
       return {
         ...state,
         visible: false,
-        currentStep: 0
+        currentStep: 0,
+        employee: null
       };
     case ON_ADD_EMPLOYEE_STEPPER_UPDATE:
       return {

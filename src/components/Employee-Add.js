@@ -25,6 +25,7 @@ const { Step } = Steps;
 
 class EmployeeAdd extends Component {
   id;
+  cachedNestedForm = {};
   formConfigs = [
     {
       placeholder: 'Enter your Name',
@@ -141,7 +142,7 @@ class EmployeeAdd extends Component {
     } else {
       errors[name] = '';
     }
-    const isFormStateValid = containValue({ ...this.state, errors: null, formInvalid: null });
+    const isFormStateValid = this.isFormContainValues();
     if (isFormStateValid) {
       this.setState({ formInvalid: false });
     }
@@ -165,8 +166,7 @@ class EmployeeAdd extends Component {
       display: current === index ? 'initial' : 'none'
     };
   }
-
-  createInput = (input, key) => {
+  createInput = (input, key, oldForm) => {
     return (
       <div key={key.toString()}>
         <Input
@@ -176,7 +176,7 @@ class EmployeeAdd extends Component {
           onChange={this.handleFieldChange}
           onBlur={this.handleFieldChange}
           addonBefore={input.addonBefore || ''}
-          defaultValue={this.state[input.name]}
+          value={oldForm && oldForm[input.name]}
           noValidate
           name={input.name}
           type={input.type}
@@ -196,14 +196,18 @@ class EmployeeAdd extends Component {
     );
   };
 
+  isFormContainValues() {
+    return containValue({ ...this.state, errors: null, formInvalid: null });
+  }
   handleSubmit = event => {
+    debugger;
     const { onSave, isEditing } = this.props;
     event.preventDefault();
 
     // if found value str in errors, then not valid
     const shouldContainNoError = !containValue(this.state.errors);
     // consider all input fields required
-    const isFormStateValid = containValue({ ...this.state, errors: null, formInvalid: null });
+    const isFormStateValid = this.isFormContainValues();
 
     if (isFormStateValid && shouldContainNoError) {
       const employeeFormState = { ...this.state, errors: null, formInvalid: null };
@@ -229,26 +233,39 @@ class EmployeeAdd extends Component {
     this.setState({
       ...this.getFormFieldsAsHashMap(this.formConfigs, {})
     });
+    this.id = null;
   };
   editEmployee(employee) {
-    const flatEmployeeStructure = convertNestedObjectToFlat(employee);
+    const flatEmployeeStructure = this.convertNestedObjectToFlat(employee);
     this.id = flatEmployeeStructure.id;
     this.setState({
       ...this.getFormFieldsAsHashMap(this.formConfigs, flatEmployeeStructure)
     });
   }
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.employee !== this.props.employee) {
+  convertNestedObjectToFlat(form) {
+    if (form) {
+      if (this.cachedNestedForm[form.id]) {
+        return this.cachedNestedForm[form.id];
+      }
+      return (this.cachedNestedForm[form.id] = convertNestedObjectToFlat(form));
+    }
+    return null;
+  }
+  componentDidUpdate(prevProps) {
+    const isFormFilled = this.isFormContainValues();
+    if (
+      prevProps.employee &&
+      this.props.employee &&
+      (prevProps.employee.id !== this.props.employee.id || !isFormFilled)
+    ) {
       if (this.props.employee) {
         this.editEmployee(this.props.employee);
       }
     }
   }
-
   render() {
     const { formInvalid } = this.state;
-    const { visible, loading, current } = this.props;
-
+    const { visible, loading, current, employee } = this.props;
     return (
       <div>
         <Button type="primary" onClick={this.showModal}>
@@ -302,7 +319,9 @@ class EmployeeAdd extends Component {
           <form onSubmit={this.handleSubmit} noValidate>
             {this.stepperDestribution.map((form, i) => (
               <div key={i.toString()} style={this.showForm(current, i)}>
-                {form.map((inputConfig, j) => this.createInput(inputConfig, j))}
+                {form.map((inputConfig, j) =>
+                  this.createInput(inputConfig, j, this.convertNestedObjectToFlat(employee))
+                )}
               </div>
             ))}
           </form>

@@ -14,7 +14,7 @@ export function convertNestedObjectToFlat(nestedObj) {
   return Object.keys(nestedObj).reduce((prev, objKey) => {
     let obj;
     const value = nestedObj[objKey];
-    if (typeof value == 'object') {
+    if (value && typeof value == 'object') {
       obj = Object.keys(value).reduce((previous, nestedKey) => {
         const obj = { [`${objKey}.${nestedKey}`]: value[nestedKey] };
         return { ...previous, ...obj };
